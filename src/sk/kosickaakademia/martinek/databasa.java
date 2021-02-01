@@ -1,24 +1,29 @@
 package sk.kosickaakademia.martinek;
 
+import sk.kosickaakademia.martinek.entity.City;
+
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.util.ArrayList;
+import java.util.List;
 
 public class databasa {
 
 
-    public void showCities(String KAUNTRI){
+    public List<City> getCities(String KAUNTRI){
 tajnosti tj = new tajnosti();
+        List<City> list = new ArrayList<>();
         try {
             String query = "SELECT city.Name, city.CountryCode " +
                     "FROM city " +
                     "INNER JOIN country ON country.code = city.CountryCode " +
                     "WHERE country.name LIKE ?";  //? znamemná že tam dačo chýýýba sú očíslované tie otázniky
-            //  Class.forName("com.mysql.jdbc.Driver");
+
             Connection conn = DriverManager.getConnection(tj.getUrl(), tj.getUsername(), tj.getPassword());
+            Class.forName("com.mysql.cj.jdbc.Driver");
             if(conn!=null){
-                Class.forName("com.mysql.cj.jdbc.Driver");
                 System.out.println("SAXES");
                 PreparedStatement ps = conn.prepareStatement(query);
                 System.out.println(ps);
@@ -29,10 +34,11 @@ tajnosti tj = new tajnosti();
 
                 ResultSet rs = ps.executeQuery();  // tu ho už spúšťa
                 while (rs.next()){
-                    String city = rs.getString("Name");
+                    String mesta = rs.getString("Name");
                     String code = rs.getString("CountryCode");
                     String country = rs.getString("CountryCode");
-                    System.out.println(city + " " + code);
+                    City city = new City(mesta,code);
+                    list.add(city);
                 }
                 conn.close();
 
@@ -41,6 +47,7 @@ tajnosti tj = new tajnosti();
         }catch (Exception e){
             e.printStackTrace();
         }
+        return list;
     }
 
 // JSON PARSING
