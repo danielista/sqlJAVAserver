@@ -43,5 +43,40 @@ tajnosti tj = new tajnosti();
         }
     }
 
+// JSON PARSING
+    public void cityJson(String KAUNTRI){
+        tajnosti tj = new tajnosti();
+        try {
+            String query = "SELECT city.Name, JSON_EXTRACT(Info,'$.Population') AS population " +
+                    "FROM city " +
+                    "INNER JOIN country ON country.code = city.CountryCode " +
+                    "WHERE country.name LIKE ? ORDER BY Population DESC";  //? znamemná že tam dačo chýýýba sú očíslované tie otázniky
+            //  Class.forName("com.mysql.jdbc.Driver");
+            Connection conn = DriverManager.getConnection(tj.getUrl(), tj.getUsername(), tj.getPassword());
+            if(conn!=null){
+                Class.forName("com.mysql.cj.jdbc.Driver");
+                System.out.println("SAXES");
+                PreparedStatement ps = conn.prepareStatement(query);
+                System.out.println(ps);
+
+
+                ps.setString(1,KAUNTRI);  // ošetrenie.. overuje či to je string..
+
+
+                ResultSet rs = ps.executeQuery();  // tu ho už spúšťa
+                while (rs.next()){
+                    String city = rs.getString("Name");
+                    int pop = rs.getInt("Population");
+                    System.out.println(city + " (" + pop + ") ");
+                }
+                conn.close();
+
+            }
+
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+    }
+
 
 }
