@@ -1,19 +1,64 @@
 package sk.kosickaakademia.martinek;
 
 import sk.kosickaakademia.martinek.entity.City;
+import sk.kosickaakademia.martinek.entity.Country;
 
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
 public class databasa {
+    tajnosti tj = new tajnosti();
+
+    //
+    public Country getCountryInfo(String country){
+        String queryZLY = "SELECT country.name, country.code, city.name " +
+               // " JSON_EXTRACT(doc, '$.geography.Continent') AS kontinent " +
+                " JSON_UNQUOTE(JSON_EXTRACT(doc, '$.geography.Continent')) AS continent " +
+                " JSON_EXTRACT(doc, '$.geography.SurfaceArea') AS area "+
+                " FROM country "+
+                " INNER JOIN city ON country.Capital = city.ID "+
+                " INNER JOIN countryinfo ON country.code = countryinfo._id "+
+                " WHERE country.name LIKE ? ";
+        String query = "SELECT country.name, country.code, city.name, " +
+                " JSON_UNQUOTE(JSON_EXTRACT(doc, '$.geography.Continent')) AS Continent, " +
+                " JSON_EXTRACT(doc, '$.geography.SurfaceArea') AS area" +
+                " FROM country " +
+                " INNER JOIN city ON country.Capital = city.ID " +
+                " INNER JOIN countryinfo ON country.code = countryinfo._id " +
+                " WHERE country.name like ?";
+
+        Country countryInfo = null;
+try {
+    Connection con = getConnection();
+
+    PreparedStatement ps = con.prepareStatement( query );
+    ps.setString(1,country);
+    ResultSet rs = ps.executeQuery();
+    if (rs.next()){
+        String code3Letters = rs.getString("country.code");
+        String capitalCity = rs.getString("city.name");
+        String continent = rs.getString("continent");
+        int area = rs.getInt("area");
+        System.out.println(code3Letters +  " " +capitalCity + " " + continent);
+
+        countryInfo = new Country(country,code3Letters,capitalCity,area,continent);
+
+    }
+
+
+}catch (Exception e){
+    e.printStackTrace();
+}
+
+
+        return countryInfo;
+    }
+
+
 
 
     public List<City> getCities(String KAUNTRI){
-tajnosti tj = new tajnosti();
         List<City> list = new ArrayList<>();
         try {
             String query = "SELECT city.Name, city.CountryCode " +
@@ -21,8 +66,7 @@ tajnosti tj = new tajnosti();
                     "INNER JOIN country ON country.code = city.CountryCode " +
                     "WHERE country.name LIKE ?";  //? znamemná že tam dačo chýýýba sú očíslované tie otázniky
 
-            Connection conn = DriverManager.getConnection(tj.getUrl(), tj.getUsername(), tj.getPassword());
-            Class.forName("com.mysql.cj.jdbc.Driver");
+            Connection conn = getConnection();
             if(conn!=null){
                 System.out.println("SAXES");
                 PreparedStatement ps = conn.prepareStatement(query);
@@ -50,7 +94,13 @@ tajnosti tj = new tajnosti();
         return list;
     }
 
-// JSON PARSING
+    private Connection getConnection() throws SQLException, ClassNotFoundException {
+        Connection conn = DriverManager.getConnection(tj.getUrl(), tj.getUsername(), tj.getPassword());
+        Class.forName("com.mysql.cj.jdbc.Driver");
+        return conn;
+    }
+
+    // JSON PARSING
     public void cityJson(String KAUNTRI){
         tajnosti tj = new tajnosti();
         try {
