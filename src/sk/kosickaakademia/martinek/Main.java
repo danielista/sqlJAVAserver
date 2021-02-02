@@ -22,5 +22,10 @@ public class Main {
         Country country1 = mojaPrvaDatabasa.getCountryInfo(country);
         out.printCountryInfo(country1);
         // System.out.println(country1);
+
+
+        //insertiky :D
+        String code = mojaPrvaDatabasa.getCountryCode("Mali");
+        System.out.println(code);
     }
 }

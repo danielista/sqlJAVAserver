@@ -10,6 +10,37 @@ import java.util.List;
 public class databasa {
     tajnosti tj = new tajnosti();
 
+    private Connection getConnection() throws SQLException, ClassNotFoundException {
+        Connection conn = DriverManager.getConnection(tj.getUrl(), tj.getUsername(), tj.getPassword());
+        Class.forName("com.mysql.cj.jdbc.Driver");
+        return conn;
+    }
+
+    public String getCountryCode (String name){
+            if(name==null | name.equalsIgnoreCase(""))   return null;
+
+        try {
+            Connection con= getConnection();
+            String query = "SELECT Code FROM country WHERE Name LIKE ?";
+            PreparedStatement ps = con.prepareStatement(query);
+            ps.setString(1,name);  //nahradzujeme jeden a vlastne ten prvy otaznik v query
+            ResultSet rs = ps.executeQuery();
+            if(rs.next()){
+                String code = rs.getString("Code");
+                return code;
+            }
+
+
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        }
+
+        return null;
+    }
+
+
     //
     public Country getCountryInfo(String country){
         String queryZLY = "SELECT country.name, country.code, city.name " +
@@ -94,11 +125,7 @@ try {
         return list;
     }
 
-    private Connection getConnection() throws SQLException, ClassNotFoundException {
-        Connection conn = DriverManager.getConnection(tj.getUrl(), tj.getUsername(), tj.getPassword());
-        Class.forName("com.mysql.cj.jdbc.Driver");
-        return conn;
-    }
+
 
     // JSON PARSING
     public void cityJson(String KAUNTRI){
