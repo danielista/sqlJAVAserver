@@ -18,14 +18,21 @@ public class Main {
 
         List<City> list = mojaPrvaDatabasa.getCities(country);
         out.printCities(list);
-
-        Country country1 = mojaPrvaDatabasa.getCountryInfo(country);
+/*
+ Country country1 = mojaPrvaDatabasa.getCountryInfo(country);
         out.printCountryInfo(country1);
         // System.out.println(country1);
 
 
         //insertiky :D
-        String code = mojaPrvaDatabasa.getCountryCode("Mali");
-        System.out.println(code);
+        //String code = mojaPrvaDatabasa.getCountryCode("Mali");
+        //System.out.println(code);
+ */
+
+
+        City newCity = new City("LUNIK 9",999,"Kosice-okolie","Slovakia");
+        mojaPrvaDatabasa.insertCity(newCity);
+
+
     }
 }

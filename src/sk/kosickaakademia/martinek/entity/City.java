@@ -9,17 +9,29 @@ public class City {
         return code;
     }
 
+    public String getCode3() {
+        return code3;
+    }
+
+    private String code3;
+    private String name;
     private String code;
+    private int population;
+    private String district;
+    private String country;
+
     public void setCode3(String code3) {
         this.code3 = code3;
     }
 
-// sprav si ešte konštruktor.. s tým čo potrebuješ.. :D
-    private String code3;
-    private String name;
-    private int population;
-    private String country;
-    private String district;
+
+
+    public City(String name, int population, String district, String country) {
+        this.name = name;
+        this.population = population;
+        this.district = district;
+        this.country = country;
+    }
 
 
     public int getPopulation() {

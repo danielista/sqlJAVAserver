@@ -27,15 +27,22 @@ public class databasa {
             ResultSet rs = ps.executeQuery();
             if(rs.next()){
                 String code = rs.getString("Code");
+                con.close();
                 return code;
             }
 
 
-        } catch (SQLException throwables) {
+        } catch (Exception e){
+            e.printStackTrace();
+        }
+
+        /*
+        catch (SQLException throwables) {
             throwables.printStackTrace();
         } catch (ClassNotFoundException e) {
             e.printStackTrace();
         }
+         */
 
         return null;
     }
@@ -163,4 +170,38 @@ try {
     }
 
 
+    public void insertCity(City newCity) {
+        String country = newCity.getCountry();
+        String code3 = getCountryCode(country);
+        if(code3 == null){
+            System.out.println("ACHTUNG ACHTUNG dana krajina:"+ country+"neexistuje! :D");
+        } else {
+            newCity.setCode3(code3);
+            String query = " INSERT INTO city (Name, CountryCode, District, Info) " +
+                    " VALUES ( ?,?,?,?) ";
+
+
+            try {
+                Connection con = getConnection();
+                PreparedStatement ps = con.prepareStatement(query);
+                ps.setString(1,newCity.getName());
+                ps.setString(2,newCity.getCode3());
+                ps.setString(3,newCity.getDistrict());
+
+
+                String json="{\"Population\": " + newCity.getPopulation() +"}";
+                ps.setString(4,json);  // vkladanie JSON-u
+
+                //ps.execute(); //vrati true alebo false.. či sa podarilo vložiť HOVNO
+                ps.executeUpdate(); //toto ale vracia int kolko riadkov zmien urobil
+                System.out.println("result: "+ps.executeUpdate());
+                con.close();
+            }catch (Exception e){
+                e.printStackTrace();
+            }
+
+
+
+        }
+    }
 }
