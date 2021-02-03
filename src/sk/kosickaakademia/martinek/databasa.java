@@ -170,6 +170,71 @@ try {
     }
 
 
+    public boolean chceckCity (String country, String city){
+
+        String query = "SELECT Name, CountryCode from city " +
+                "WHERE CountryCode LIKE ?";
+        try {
+            Connection connection = getConnection();
+                String code = getCountryCode(country);
+                if (code == null) return false;
+                PreparedStatement ps = connection.prepareStatement(query);
+                ps.setString(1, code);
+                ResultSet rs = ps.executeQuery();
+                while (rs.next()){
+                    if (city.equalsIgnoreCase(rs.getString("Name")))
+                        return true;
+                }
+                connection.close();
+        } catch (Exception e) { e.printStackTrace(); }
+        return false;
+    }
+
+    public void updatePopulation(String country, String city, int population) {
+    if(chceckCity(country,city)){
+
+
+        if(population < 1 || population>1111111111){
+            System.out.println("ACHTUNG ACHTUNG ::!! nemožeš zmeniť populaciu niesi Thanos");
+        } else {
+
+            String query = "UPDATE city " +
+                            "SET Info = '?' " +
+                            "WHERE Name = '?'" ;
+
+            /*
+            String query = "UPDATE city " +
+                    " SET " +
+                    " Info = ? " +
+                    " FROM " +
+                    " Country " +
+                    " INNER JOIN city ON country.code = city.CountryCode " +
+                    " WHERE " +
+                    " city.Name = ? ";
+
+                    FROM country city
+INNER JOIN city ON country.code = city.CountryCode
+             */
+
+            try {
+                Connection con = getConnection();
+                PreparedStatement ps = con.prepareStatement(query);
+
+                String json="{\"Population\": " + population +"}";
+                ps.setString(1,json);  // vkladanie JSON-u
+                ps.setString(2,city);
+
+                ps.executeUpdate(); //toto ale vracia int kolko riadkov zmien urobil
+                System.out.println("result: "+ps.executeUpdate());
+                con.close();
+            }catch (Exception e){
+                e.printStackTrace();
+            }
+        }
+    }else System.out.println("Si si istý že mesto Ti patrí do tvojho štátu?");
+    }
+
+
     public void insertCity(City newCity) {
         String country = newCity.getCountry();
         String code3 = getCountryCode(country);

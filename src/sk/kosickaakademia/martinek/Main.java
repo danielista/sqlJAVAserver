@@ -29,10 +29,9 @@ public class Main {
         //System.out.println(code);
  */
 
-
         City newCity = new City("LUNIK 9",999,"Kosice-okolie","Slovakia");
-        mojaPrvaDatabasa.insertCity(newCity);
+       // mojaPrvaDatabasa.insertCity(newCity);
 
-
+        mojaPrvaDatabasa.updatePopulation("Slovakia","Kabul",178002);
     }
 }
