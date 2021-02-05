@@ -18,12 +18,6 @@ public class City {
 
     private int population;
     private String country;
-
-    public City(String name, int population, String country) {
-        this.name = name;
-        this.population = population;
-        this.country = country;
-    }
     private String code;
     private String district;
 

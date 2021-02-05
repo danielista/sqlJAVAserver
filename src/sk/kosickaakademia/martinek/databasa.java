@@ -18,32 +18,29 @@ public class databasa {
     }
 
     public String getCountryCode (String name){
-            if(name==null | name.equalsIgnoreCase(""))   return null;
-
-        try {
-            Connection con= getConnection();
-            String query = "SELECT Code FROM country WHERE Name LIKE ?";
-            PreparedStatement ps = con.prepareStatement(query);
-            ps.setString(1,name);  //nahradzujeme jeden a vlastne ten prvy otaznik v query
-            ResultSet rs = ps.executeQuery();
-            if(rs.next()){
-                String code = rs.getString("Code");
-                con.close();
-                return code;
+            if(name == null || name.equalsIgnoreCase(""))   return null;
+            try {
+                Connection con= getConnection();
+                String query = "SELECT Code FROM country WHERE Name LIKE ?";
+                PreparedStatement ps = con.prepareStatement(query);
+                ps.setString(1,name);  //nahradzujeme jeden a vlastne ten prvy otaznik v query
+                ResultSet rs = ps.executeQuery();
+                if(rs.next()){
+                    String code = rs.getString("Code");
+                    con.close();
+                    return code;
+                }
+            } catch (Exception e){
+                e.printStackTrace();
             }
 
-
-        } catch (Exception e){
-            e.printStackTrace();
-        }
-
-        /*
-        catch (SQLException throwables) {
-            throwables.printStackTrace();
-        } catch (ClassNotFoundException e) {
-            e.printStackTrace();
-        }
-         */
+            /*
+            catch (SQLException throwables) {
+                throwables.printStackTrace();
+            } catch (ClassNotFoundException e) {
+                e.printStackTrace();
+            }
+             */
 
         return null;
     }
@@ -53,82 +50,76 @@ public class databasa {
     /// GET CAPITAL CIETIES BASED ON CONTINENT INPUT ;) 5.februara 2021
     List<CapitalCity> getCapitalCities(String continent) {
 
-        String query= "SELECT country.name AS KRAJINA, city.name AS MESTECKO,         \n" +
-                "         JSON_EXTRACT(Info,'$.Population') AS POPULACIA\n" +
-                "            FROM country\n" +
-                "            INNER JOIN city ON country.Capital = city.ID\n" +
-                "            INNER JOIN countryinfo ON country.code = countryinfo._id\n" +
-                "            WHERE JSON_UNQUOTE(JSON_EXTRACT(doc, '$.geography.Continent')) like ? ";
-        ArrayList<CapitalCity> continentCities = new ArrayList<>();
+            String query= "SELECT country.name AS krajina, city.name AS mestecko,         \n" +
+                    "         JSON_EXTRACT(Info,'$.Population') AS populacia\n" +
+                    "            FROM country\n" +
+                    "            INNER JOIN city ON country.Capital = city.ID\n" +
+                    "            INNER JOIN countryinfo ON country.code = countryinfo._id\n" +
+                    "            WHERE JSON_UNQUOTE(JSON_EXTRACT(doc, '$.geography.Continent')) like ? ";
+            ArrayList<CapitalCity> continentCities = new ArrayList<>();
 
-        try {
-            Connection con = getConnection();
-            PreparedStatement ps = con.prepareStatement( query );
-            ps.setString(1,continent);
-            ResultSet rs = ps.executeQuery();
-            while (rs.next()){
-                String KRAJINA = rs.getString("KRAJINA");
-                String MESTECKO = rs.getString("MESTECKO");
-                int POPULACIA = rs.getInt("POPULACIA");
+            try {
+                Connection con = getConnection();
+                PreparedStatement ps = con.prepareStatement( query );
+                ps.setString(1,continent);
+                ResultSet rs = ps.executeQuery();
+                while (rs.next()){
+                    String krajina = rs.getString("krajina");
+                    String mestecko = rs.getString("mestecko");
+                    int populacia = rs.getInt("populacia");
 
-               // System.out.println(KRAJINA +  " " +MESTECKO + " " + POPULACIA);
-                CapitalCity cc = new CapitalCity(KRAJINA,MESTECKO,POPULACIA);
-                continentCities.add(cc);
+                   // System.out.println(krajina +  " " +mestecko + " " + populacia);
+                    CapitalCity cc = new CapitalCity(krajina,mestecko,populacia);
+                    continentCities.add(cc);
 
+                }
+            }catch (Exception e){
+                e.printStackTrace();
             }
-        }catch (Exception e){
-            e.printStackTrace();
-        }
 
-        return continentCities;
+            return continentCities;
     }
 
 
 
-
-    //
     public Country getCountryInfo(String country){
-        String queryZLY = "SELECT country.name, country.code, city.name " +
-               // " JSON_EXTRACT(doc, '$.geography.Continent') AS kontinent " +
-                " JSON_UNQUOTE(JSON_EXTRACT(doc, '$.geography.Continent')) AS continent " +
-                " JSON_EXTRACT(doc, '$.geography.SurfaceArea') AS area "+
-                " FROM country "+
-                " INNER JOIN city ON country.Capital = city.ID "+
-                " INNER JOIN countryinfo ON country.code = countryinfo._id "+
-                " WHERE country.name LIKE ? ";
-        String query = "SELECT country.name, country.code, city.name, " +
-                " JSON_UNQUOTE(JSON_EXTRACT(doc, '$.geography.Continent')) AS Continent, " +
-                " JSON_EXTRACT(doc, '$.geography.SurfaceArea') AS area" +
-                " FROM country " +
-                " INNER JOIN city ON country.Capital = city.ID " +
-                " INNER JOIN countryinfo ON country.code = countryinfo._id " +
-                " WHERE country.name like ?";
+            String queryZLY = "SELECT country.name, country.code, city.name " +
+                   // " JSON_EXTRACT(doc, '$.geography.Continent') AS kontinent " +
+                    " JSON_UNQUOTE(JSON_EXTRACT(doc, '$.geography.Continent')) AS continent " +
+                    " JSON_EXTRACT(doc, '$.geography.SurfaceArea') AS area "+
+                    " FROM country "+
+                    " INNER JOIN city ON country.Capital = city.ID "+
+                    " INNER JOIN countryinfo ON country.code = countryinfo._id "+
+                    " WHERE country.name LIKE ? ";
+            String query = "SELECT country.name, country.code, city.name, " +
+                    " JSON_UNQUOTE(JSON_EXTRACT(doc, '$.geography.Continent')) AS Continent, " +
+                    " JSON_EXTRACT(doc, '$.geography.SurfaceArea') AS area" +
+                    " FROM country " +
+                    " INNER JOIN city ON country.Capital = city.ID " +
+                    " INNER JOIN countryinfo ON country.code = countryinfo._id " +
+                    " WHERE country.name like ?";
 
-        Country countryInfo = null;
-try {
-    Connection con = getConnection();
+                    Country countryInfo = null;
+            try {
+                Connection con = getConnection();
+                PreparedStatement ps = con.prepareStatement( query );
+                ps.setString(1,country);
+                ResultSet rs = ps.executeQuery();
 
-    PreparedStatement ps = con.prepareStatement( query );
-    ps.setString(1,country);
-    ResultSet rs = ps.executeQuery();
-    if (rs.next()){
-        String code3Letters = rs.getString("country.code");
-        String capitalCity = rs.getString("city.name");
-        String continent = rs.getString("continent");
-        int area = rs.getInt("area");
-        System.out.println(code3Letters +  " " +capitalCity + " " + continent);
+                if (rs.next()){
+                    String code3Letters = rs.getString("country.code");
+                    String capitalCity = rs.getString("city.name");
+                    String continent = rs.getString("continent");
+                    int area = rs.getInt("area");
+                    // System.out.println(code3Letters +  " " +capitalCity + " " + continent);
 
-        countryInfo = new Country(country,code3Letters,capitalCity,area,continent);
+                    countryInfo = new Country(country,code3Letters,capitalCity,area,continent);
+                }
+            }catch (Exception e){
+                e.printStackTrace();
+            }
 
-    }
-
-
-}catch (Exception e){
-    e.printStackTrace();
-}
-
-
-        return countryInfo;
+            return countryInfo;
     }
 
 
@@ -148,9 +139,7 @@ try {
                 PreparedStatement ps = conn.prepareStatement(query);
                 System.out.println(ps);
 
-
                 ps.setString(1,KAUNTRI);  // ošetrenie.. overuje či to je string..
-
 
                 ResultSet rs = ps.executeQuery();  // tu ho už spúšťa
                 while (rs.next()){
@@ -160,7 +149,7 @@ try {
                     City city = new City(mesta,code);
                     list.add(city);
                 }
-                conn.close();
+                conn.close(); // treba aj zatvárať po sebe connections  .. čo máš doma záclony? :D
 
             }
 
@@ -208,6 +197,7 @@ try {
     }
 
 
+
     public boolean chceckCity (String country, String city){
 
         String query = "SELECT Name, CountryCode from city " +
@@ -228,56 +218,56 @@ try {
         return false;
     }
 
+
     public void updatePopulation(String country, String city, int population) {
-    //if(chceckCity(country,city)){
+    //if(chceckCity(country,city)){           // skúšam či nieje v tej samotnej metode nejaka chyba :D a teda potom to spraviť cez jeden select aj validaciu
+
+            if(population < 1 || population>1111111111){
+                System.out.println("ACHTUNG ACHTUNG ::!! nemožeš zmeniť populaciu niesi Thanos");
+            } else {
+                String query = "update city " +
+                        "inner join country on city.countryCode=country.code " +
+                        "set info=? " +
+                        "where city.name like ? and country.name like ?";
+
+            /*
+
+                                String query = "UPDATE city " +
+                                        "SET Info = '?' " +
+                                        "WHERE Name = '?'" ;
 
 
-        if(population < 1 || population>1111111111){
-            System.out.println("ACHTUNG ACHTUNG ::!! nemožeš zmeniť populaciu niesi Thanos");
-        } else {
-            String query = "update city " +
-                    "inner join country on city.countryCode=country.code " +
-                    "set info=? " +
-                    "where city.name like ? and country.name like ?";
-
-/*
-
-                    String query = "UPDATE city " +
-                            "SET Info = '?' " +
-                            "WHERE Name = '?'" ;
 
 
+                        String query = "UPDATE city " +
+                                " SET " +
+                                " Info = ? " +
+                                " FROM " +
+                                " Country " +
+                                " INNER JOIN city ON country.code = city.CountryCode " +
+                                " WHERE " +
+                                " city.Name = ? ";
 
+                                FROM country city
+            INNER JOIN city ON country.code = city.CountryCode
+                 */
 
-            String query = "UPDATE city " +
-                    " SET " +
-                    " Info = ? " +
-                    " FROM " +
-                    " Country " +
-                    " INNER JOIN city ON country.code = city.CountryCode " +
-                    " WHERE " +
-                    " city.Name = ? ";
+                try {
+                    Connection con = getConnection();
+                    PreparedStatement ps = con.prepareStatement(query);
 
-                    FROM country city
-INNER JOIN city ON country.code = city.CountryCode
-             */
+                    String json="{\"Population\": " + population +"}";
+                    ps.setString(1,json);  // vkladanie JSON-u
+                    ps.setString(2,city);
 
-            try {
-                Connection con = getConnection();
-                PreparedStatement ps = con.prepareStatement(query);
-
-                String json="{\"Population\": " + population +"}";
-                ps.setString(1,json);  // vkladanie JSON-u
-                ps.setString(2,city);
-
-                ps.executeUpdate(); //toto ale vracia int kolko riadkov zmien urobil
-                System.out.println("result: "+ps.executeUpdate());
-                con.close();
-            }catch (Exception e){
-                e.printStackTrace();
+                    ps.executeUpdate(); //toto ale vracia int kolko riadkov zmien urobil
+                    System.out.println("result: "+ps.executeUpdate());
+                    con.close();
+                }catch (Exception e){
+                    e.printStackTrace();
+                }
             }
-        }
-    //}else System.out.println("Si si istý že mesto Ti patrí do tvojho štátu?");
+        //}else System.out.println("Si si istý že mesto Ti patrí do tvojho štátu?");
     }
 
 
@@ -310,9 +300,8 @@ INNER JOIN city ON country.code = city.CountryCode
             }catch (Exception e){
                 e.printStackTrace();
             }
-
-
-
         }
     }
+
+
 }
