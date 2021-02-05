@@ -16,14 +16,18 @@ public class Main {
 
         String country = "Slovakia";
 
-        List<City> list = mojaPrvaDatabasa.getCities(country);
-        out.printCities(list);
-/*
- Country country1 = mojaPrvaDatabasa.getCountryInfo(country);
+     // List<City> list = mojaPrvaDatabasa.getCities(country);
+       // out.printCities(list);
+
+        Country country1 = mojaPrvaDatabasa.getCountryInfo(country);
         out.printCountryInfo(country1);
         // System.out.println(country1);
 
 
+      // CAPITAL CITIES CONTINENT
+      out.printCC(mojaPrvaDatabasa.getCapitalCities("Europe"));
+
+/*
         //insertiky :D
         //String code = mojaPrvaDatabasa.getCountryCode("Mali");
         //System.out.println(code);
@@ -32,6 +36,6 @@ public class Main {
         City newCity = new City("LUNIK 9",999,"Kosice-okolie","Slovakia");
        // mojaPrvaDatabasa.insertCity(newCity);
 
-        mojaPrvaDatabasa.updatePopulation("Slovakia","Kabul",178002);
+      //nejde  mojaPrvaDatabasa.updatePopulation("Afganistan","Kabul",1786652);
     }
 }

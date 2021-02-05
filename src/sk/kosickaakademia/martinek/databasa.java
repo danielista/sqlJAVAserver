@@ -1,5 +1,6 @@
 package sk.kosickaakademia.martinek;
 
+import sk.kosickaakademia.martinek.entity.CapitalCity;
 import sk.kosickaakademia.martinek.entity.City;
 import sk.kosickaakademia.martinek.entity.Country;
 
@@ -46,6 +47,43 @@ public class databasa {
 
         return null;
     }
+
+
+
+    /// GET CAPITAL CIETIES BASED ON CONTINENT INPUT ;) 5.februara 2021
+    List<CapitalCity> getCapitalCities(String continent) {
+
+        String query= "SELECT country.name AS KRAJINA, city.name AS MESTECKO,         \n" +
+                "         JSON_EXTRACT(Info,'$.Population') AS POPULACIA\n" +
+                "            FROM country\n" +
+                "            INNER JOIN city ON country.Capital = city.ID\n" +
+                "            INNER JOIN countryinfo ON country.code = countryinfo._id\n" +
+                "            WHERE JSON_UNQUOTE(JSON_EXTRACT(doc, '$.geography.Continent')) like ? ";
+        ArrayList<CapitalCity> continentCities = new ArrayList<>();
+
+        try {
+            Connection con = getConnection();
+            PreparedStatement ps = con.prepareStatement( query );
+            ps.setString(1,continent);
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()){
+                String KRAJINA = rs.getString("KRAJINA");
+                String MESTECKO = rs.getString("MESTECKO");
+                int POPULACIA = rs.getInt("POPULACIA");
+
+               // System.out.println(KRAJINA +  " " +MESTECKO + " " + POPULACIA);
+                CapitalCity cc = new CapitalCity(KRAJINA,MESTECKO,POPULACIA);
+                continentCities.add(cc);
+
+            }
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+
+        return continentCities;
+    }
+
+
 
 
     //
@@ -191,18 +229,26 @@ try {
     }
 
     public void updatePopulation(String country, String city, int population) {
-    if(chceckCity(country,city)){
+    //if(chceckCity(country,city)){
 
 
         if(population < 1 || population>1111111111){
             System.out.println("ACHTUNG ACHTUNG ::!! nemožeš zmeniť populaciu niesi Thanos");
         } else {
+            String query = "update city " +
+                    "inner join country on city.countryCode=country.code " +
+                    "set info=? " +
+                    "where city.name like ? and country.name like ?";
 
-            String query = "UPDATE city " +
+/*
+
+                    String query = "UPDATE city " +
                             "SET Info = '?' " +
                             "WHERE Name = '?'" ;
 
-            /*
+
+
+
             String query = "UPDATE city " +
                     " SET " +
                     " Info = ? " +
@@ -231,7 +277,7 @@ INNER JOIN city ON country.code = city.CountryCode
                 e.printStackTrace();
             }
         }
-    }else System.out.println("Si si istý že mesto Ti patrí do tvojho štátu?");
+    //}else System.out.println("Si si istý že mesto Ti patrí do tvojho štátu?");
     }
 
 

@@ -15,10 +15,17 @@ public class City {
 
     private String code3;
     private String name;
-    private String code;
+
     private int population;
-    private String district;
     private String country;
+
+    public City(String name, int population, String country) {
+        this.name = name;
+        this.population = population;
+        this.country = country;
+    }
+    private String code;
+    private String district;
 
     public void setCode3(String code3) {
         this.code3 = code3;

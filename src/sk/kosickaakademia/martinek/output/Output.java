@@ -1,5 +1,6 @@
 package sk.kosickaakademia.martinek.output;
 
+import sk.kosickaakademia.martinek.entity.CapitalCity;
 import sk.kosickaakademia.martinek.entity.City;
 import sk.kosickaakademia.martinek.entity.Country;
 
@@ -14,6 +15,14 @@ public class Output {
     }
 
 
+    public void printCC(List<CapitalCity> list){
+        System.out.println(" TU TO JE HLAVNE MESTA ZADANEHO KONTINENTU  (metoda cc)" );
+        for(CapitalCity cc : list){
+            System.out.println(" - Krajina: " + cc.getCountry() +"  ,mesto: "+ cc.getCityname() +"  s populáciou: "+ cc.getPopulation() );
+        }
+    }
+
+
     public void printCountryInfo(Country country){
 
         if(country == null){
@@ -23,8 +32,6 @@ public class Output {
             System.out.println("hlavné mesto: " + country.getCapitalCity());
             System.out.println("KONTINENT: " + country.getContinent());
         }
-
-
     }
 
 }
