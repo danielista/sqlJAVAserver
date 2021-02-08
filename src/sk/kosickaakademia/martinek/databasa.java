@@ -3,6 +3,7 @@ package sk.kosickaakademia.martinek;
 import sk.kosickaakademia.martinek.entity.CapitalCity;
 import sk.kosickaakademia.martinek.entity.City;
 import sk.kosickaakademia.martinek.entity.Country;
+import sk.kosickaakademia.martinek.entity.Monument;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -107,6 +108,39 @@ public class databasa {
 
         return true;
     }
+
+   // GET MONUMENTS STATEMENT
+    public List<Monument>  getMonuments(){
+        String query= "SELECT monument.id AS monumentID, monument.name AS monumentName, city.Name AS mestecko, country.Name AS krajina " +
+                "       FROM monument " +
+                "        INNER JOIN city ON city.ID = monument.city " +
+                "         INNER JOIN country ON country.Code = city.CountryCode ";
+        ArrayList<Monument> monuments = new ArrayList<>();
+
+        try {
+            Connection con = getConnection();
+            PreparedStatement ps = con.prepareStatement( query );
+
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()){
+                String krajina = rs.getString("krajina");
+                String mestecko = rs.getString("mestecko");
+                String monumentName = rs.getString("monumentName");
+                int monumentID = rs.getInt("monumentID");
+
+                System.out.println(krajina +  " " +mestecko + " " + monumentName + monumentID);
+                Monument monument = new Monument(krajina,mestecko,monumentName,monumentID);
+                monuments.add(monument);
+
+            }
+            con.close();
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+
+        return monuments;
+    }
+
 
     /// GET CAPITAL CIETIES BASED ON CONTINENT INPUT ;) 5.februara 2021
     List<CapitalCity> getCapitalCities(String continent) {

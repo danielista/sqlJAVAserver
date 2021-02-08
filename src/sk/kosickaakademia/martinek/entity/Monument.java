@@ -2,20 +2,20 @@ package sk.kosickaakademia.martinek.entity;
 
 public class Monument {
 
-    public String getCode3() {
-        return code3;
+    public String getCountryName() {
+        return countryName;
     }
 
-    public void setCode3(String code3) {
-        this.code3 = code3;
+    public void setCountryName(String countryName) {
+        this.countryName = countryName;
     }
 
-    public String getCity() {
-        return city;
+    public String getCityName() {
+        return cityName;
     }
 
-    public void setCity(String city) {
-        this.city = city;
+    public void setCityName(String cityName) {
+        this.cityName = cityName;
     }
 
     public String getMonumentName() {
@@ -26,14 +26,31 @@ public class Monument {
         this.monumentName = monumentName;
     }
 
-    public Monument(String code3, String city, String monumentName) {
-        this.code3 = code3;
-        this.city = city;
-        this.monumentName = monumentName;
+    public int getMonumentID() {
+        return monumentID;
     }
 
+    public void setMonumentID(int monumentID) {
+        this.monumentID = monumentID;
+    }
+
+    public Monument(String countryName, String cityName, String monumentName, int monumentID) {
+        this.countryName = countryName;
+        this.cityName = cityName;
+        this.monumentName = monumentName;
+        this.monumentID = monumentID;
+    }
+
+    /*
+             Trieda Monument sa sklada z :
+          - nazov krajiny (nie kod)
+          - nazov mesta
+          - nazov pamiatky
+          - id pamiatky
+             */
     //  public boolean insertNewMonument( String code3, String city, String name )
-    private String code3;
-    private String city;
+    private String countryName;
+    private String cityName;
     private String monumentName;
+    private int monumentID;
 }
