@@ -26,12 +26,15 @@ public class Main {
 
 
           // CAPITAL CITIES CONTINENT
-          out.printCC(mojaPrvaDatabasa.getCapitalCities("Europe"));
+       //   out.printCC(mojaPrvaDatabasa.getCapitalCities("Europe"));
 
 
         //insertiky :D
         //String code = mojaPrvaDatabasa.getCountryCode("Mali");
         //System.out.println(code);
+
+        mojaPrvaDatabasa.insertNewMonument("FRA","Paris", "eiffel tower 2" );
+
 
 
        // City newCity = new City("Bytca",404,"Zilina","Slovakia");

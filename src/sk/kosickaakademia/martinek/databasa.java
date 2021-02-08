@@ -46,6 +46,67 @@ public class databasa {
     }
 
 
+    // DOES EXIST CITY?  :D
+    public int existCity(String code3, String cityName){
+        if(code3==null || cityName==null || code3.equals("") || cityName.equals(""))
+            return -1;
+
+
+        String query = "SELECT id FROM city WHERE CountryCode LIKE ? AND name LIKE ? ";
+            try {
+                Connection con = getConnection();
+                PreparedStatement ps = con.prepareStatement(query);
+                        ps.setString(1, code3);
+                        ps.setString(2, cityName);
+                        ResultSet rs = ps.executeQuery();
+
+                       // con.close();
+
+                        if(rs.next()){
+                            int id = rs.getInt("id");
+                            con.close();
+                            return id;
+                        }else {
+                            con.close();
+                            return -1;
+                        }
+
+
+
+            }catch (Exception e){
+                e.printStackTrace();
+            }
+
+
+
+        return -1; // znamená že mesto neexistuje
+    }
+
+    public boolean insertNewMonument(String code3, String city, String name){
+
+        if(name == null || name.equals(""))
+            return false;
+
+        int cityId = existCity(code3, city);
+        if(cityId == -1)return false;
+
+
+        String query = "INSERT INTO monument(name,city) VALUES (?, ?) ";
+        try {
+            Connection con = getConnection();
+                PreparedStatement ps = con.prepareStatement(query);
+                ps.setString(1,name);
+                ps.setInt(2,cityId);
+                ps.executeUpdate();
+            con.close();
+
+
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+
+        return true;
+    }
 
     /// GET CAPITAL CIETIES BASED ON CONTINENT INPUT ;) 5.februara 2021
     List<CapitalCity> getCapitalCities(String continent) {
