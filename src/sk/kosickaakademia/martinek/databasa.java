@@ -128,7 +128,7 @@ public class databasa {
                 String monumentName = rs.getString("monumentName");
                 int monumentID = rs.getInt("monumentID");
 
-                System.out.println(krajina +  " " +mestecko + " " + monumentName + monumentID);
+              //  System.out.println(krajina +  " " +mestecko + " " + monumentName + monumentID);
                 Monument monument = new Monument(krajina,mestecko,monumentName,monumentID);
                 monuments.add(monument);
 

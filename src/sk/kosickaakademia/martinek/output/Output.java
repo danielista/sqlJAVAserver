@@ -3,6 +3,7 @@ package sk.kosickaakademia.martinek.output;
 import sk.kosickaakademia.martinek.entity.CapitalCity;
 import sk.kosickaakademia.martinek.entity.City;
 import sk.kosickaakademia.martinek.entity.Country;
+import sk.kosickaakademia.martinek.entity.Monument;
 
 import java.util.List;
 
@@ -11,6 +12,14 @@ public class Output {
         System.out.println("List of cities: ");
         for(City c : list){
             System.out.println("    - " + c.getName() );
+        }
+    }
+
+    public void printMonuments( List<Monument> list ){
+        System.out.println(" TOTO sú MONUMENTALNE PAMIATKY AJ S MIESTOM ICH VÝSKYTU:" );
+        for(Monument mnm : list){
+            System.out.println(" - Krajina: " + mnm.getCountryName() +",    Mesto: "+ mnm.getCityName()  +
+                    ",     Pamiatka: "+ mnm.getMonumentName() + ",     ID: " + mnm.getMonumentID());
         }
     }
 

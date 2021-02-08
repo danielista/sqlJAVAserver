@@ -34,8 +34,7 @@ public class Main {
         //System.out.println(code);
 
         // mojaPrvaDatabasa.insertNewMonument("FRA","Paris", "eiffel tower 2" );
-        mojaPrvaDatabasa.getMonuments();
-
+            out.printMonuments( mojaPrvaDatabasa.getMonuments());
 
        // City newCity = new City("Bytca",404,"Zilina","Slovakia");
        // mojaPrvaDatabasa.insertCity(newCity);
