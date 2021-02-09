@@ -1,6 +1,7 @@
 package sk.kosickaakademia.martinek;
 
 
+import sk.kosickaakademia.martinek.json.Server;
 import sk.kosickaakademia.martinek.output.Output;
 
 
@@ -34,11 +35,18 @@ public class Main {
         //System.out.println(code);
 
         // mojaPrvaDatabasa.insertNewMonument("FRA","Paris", "eiffel tower 2" );
-            out.printMonuments( mojaPrvaDatabasa.getMonuments());
+          //  out.printMonuments( mojaPrvaDatabasa.getMonuments());
 
        // City newCity = new City("Bytca",404,"Zilina","Slovakia");
        // mojaPrvaDatabasa.insertCity(newCity);
 
        // nejde ešte PROPERLY mojaPrvaDatabasa.updatePopulation("Afganistan","Kabul",1786652);
+
+/////////////////////////////////////////////////////////////////////////////////
+/////////////  SERVEER   ////////////////////////////////////////////////////////
+ ////////////////////////////////////////////////////////////////////
+
+        Server server = new Server();
+        server.getMonument();
     }
 }
