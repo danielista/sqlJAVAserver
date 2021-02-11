@@ -4,6 +4,7 @@ import sk.kosickaakademia.martinek.entity.CapitalCity;
 import sk.kosickaakademia.martinek.entity.City;
 import sk.kosickaakademia.martinek.entity.Country;
 import sk.kosickaakademia.martinek.entity.Monument;
+import sk.kosickaakademia.martinek.json.Server;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -85,14 +86,15 @@ public class databasa {
 
     public boolean insertNewMonument(String code3, String city, String name){
 
+
         if(name == null || name.equals(""))
             return false;
 
         int cityId = existCity(code3, city);
         if(cityId == -1)return false;
 
-
         String query = "INSERT INTO monument(name,city) VALUES (?, ?) ";
+
         try {
             Connection con = getConnection();
                 PreparedStatement ps = con.prepareStatement(query);

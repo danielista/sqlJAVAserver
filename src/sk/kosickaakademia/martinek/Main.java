@@ -34,7 +34,7 @@ public class Main {
         //String code = mojaPrvaDatabasa.getCountryCode("Mali");
         //System.out.println(code);
 
-        // mojaPrvaDatabasa.insertNewMonument("FRA","Paris", "eiffel tower 2" );
+         //mojaPrvaDatabasa.insertNewMonument("EGY","Aleksandria", "library" );
           //  out.printMonuments( mojaPrvaDatabasa.getMonuments());
 
        // City newCity = new City("Bytca",404,"Zilina","Slovakia");
@@ -48,5 +48,9 @@ public class Main {
 
         Server server = new Server();
         server.getMonument();
+        server.jsonINPUT();
+        //server.insertJSONMONUMENT();
+
+
     }
 }
